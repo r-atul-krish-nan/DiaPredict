@@ -1,0 +1,7 @@
+npm error Lifecycle script `dev` failed with error:
+npm error code 4294967295
+npm error path D:\DiaPredict2.0\apps\web
+npm error workspace @diapredict/web@0.1.0
+npm error location D:\DiaPredict2.0\apps\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vite

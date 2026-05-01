@@ -1,0 +1,232 @@
+# DiaPredict Presentation Q&A
+
+## Project Basics
+
+**1. What is the main objective of your project?**  
+The main objective of DiaPredict is to predict a user's future risk of Type 2 Diabetes using health data collected from wearable devices and mobile health apps. The system also explains the prediction using SHAP so the user can understand which factors influenced the risk score.
+
+**2. Why did you choose Type 2 Diabetes prediction?**  
+Type 2 Diabetes is a common lifestyle-related chronic disease, and early risk awareness can help users take preventive action. Many people do not go for regular checkups, so a wearable-based monitoring system can help identify possible risk earlier.
+
+**3. What problem does this system solve?**  
+The system addresses delayed diabetes risk detection caused by infrequent health checkups and underused wearable health data. It converts daily health metrics into a meaningful risk score and explanation.
+
+**4. Who are the target users of this system?**  
+The target users are health-conscious individuals, busy working adults, people at risk of diabetes, and users who already track health data through smartwatches or mobile health apps.
+
+**5. How is your system different from regular diabetes checkups?**  
+Regular checkups are periodic and depend on clinical tests, while DiaPredict provides continuous risk monitoring using wearable and health app data. However, it does not replace medical diagnosis.
+
+**6. Is this system for diagnosis or only risk prediction?**  
+This system is only for risk prediction and preventive awareness. It is not a diagnostic tool, and users should consult healthcare professionals for clinical confirmation.
+
+## System Workflow
+
+**7. How does data flow through your system?**  
+Health data is collected by a smartwatch or health app, shared through Health Connect, read by the DiaPredict Android sync app, sent to the backend, processed by the prediction model, and displayed on the web dashboard.
+
+**8. What is the role of the Android sync app?**  
+The Android sync app acts as a bridge between Health Connect and the backend. It reads permitted health metrics from the phone and uploads them to the system.
+
+**9. Why did you use Health Connect?**  
+Health Connect provides a common platform for health apps to share data securely with user permission. It allows DiaPredict to read health metrics without directly accessing private app databases.
+
+**10. Does the app read data directly from Samsung Health?**  
+No. The app reads data from Health Connect. Samsung Health must first share its data with Health Connect, and then DiaPredict can read the permitted records.
+
+**11. What happens if some health metrics are missing?**  
+If a required metric is missing, the system can either use default values from the trained model or allow the user to manually enter missing values. In the UI, unavailable values are shown clearly.
+
+**12. Where is the user data stored?**  
+The backend stores data in memory while running and persists it in a local JSON file at `apps/api/data/store.json`.
+
+## Machine Learning
+
+**13. Which machine learning model did you use?**  
+The system uses a Random Forest Classifier.
+
+**14. Why did you choose Random Forest?**  
+Random Forest was chosen because it works well with tabular health data, handles non-linear relationships, reduces overfitting by combining multiple trees, and is compatible with Tree SHAP explainability.
+
+**15. What features are used for prediction?**  
+The model uses Glucose, BloodPressure, BMI, Age, and Daily_Steps.
+
+**16. What dataset did you use for training?**  
+The model was trained using the cleaned diabetes dataset based on the PIMA Indians Diabetes Dataset.
+
+**17. What is the target variable in your dataset?**  
+The target variable is `Outcome`, which represents whether the person is diabetic or non-diabetic in the dataset.
+
+**18. How does the Random Forest classify users?**  
+The Random Forest uses many decision trees. Each tree makes a prediction based on feature thresholds, and the forest combines the outputs of all trees to produce the final diabetes risk probability.
+
+**19. What is the accuracy of your model?**  
+The current model achieved an accuracy of about 75.97% on the test set.
+
+**20. What are precision, recall, and F1-score in your result?**  
+The model achieved precision of 68.09%, recall of 59.26%, and F1-score of 63.37% on the test set.
+
+**21. Why is recall important in a healthcare project?**  
+Recall is important because it measures how many actual at-risk cases were correctly identified. In healthcare, missing a high-risk patient can be more harmful than giving a cautious warning.
+
+**22. What does the confusion matrix show?**  
+The confusion matrix shows how many samples were correctly or incorrectly classified as diabetic or non-diabetic. It helps identify true positives, true negatives, false positives, and false negatives.
+
+**23. How do you handle missing values?**  
+During training, missing values are handled using median values. During prediction, if live data is missing, the system can use model defaults or user-provided manual inputs.
+
+## Explainable AI
+
+**24. Why did you use Explainable AI?**  
+Explainable AI was used to make the prediction transparent. Instead of only showing a risk percentage, the system explains which features increased or decreased the risk.
+
+**25. What is SHAP?**  
+SHAP stands for SHapley Additive exPlanations. It is an Explainable AI method that shows how much each feature contributed to a model prediction.
+
+**26. Why did you use Tree SHAP?**  
+Tree SHAP was used because the prediction model is a Random Forest, which is a tree-based model. Tree SHAP is designed specifically for decision tree models.
+
+**27. What does a positive SHAP value mean?**  
+A positive SHAP value means that the feature increased the predicted diabetes risk.
+
+**28. What does a negative SHAP value mean?**  
+A negative SHAP value means that the feature reduced the predicted diabetes risk.
+
+**29. What is base risk in SHAP?**  
+Base risk is the model's average starting prediction before considering the current user's specific feature values. It comes from the trained model and training data distribution.
+
+**30. Is base risk different for every user?**  
+No. For the same trained model and SHAP background distribution, the base risk is generally the same for all users. The final risk changes because each user's feature contributions are different.
+
+**31. How does SHAP improve trust in the system?**  
+SHAP improves trust by showing the reason behind the prediction. Users can see which factors affected the result instead of treating the model as a black box.
+
+**32. Does SHAP give medical advice directly?**  
+No. SHAP only explains feature contributions. Any action guidance is generated separately using a rule-based recommendation layer built on top of the SHAP explanation.
+
+## Health and Medical Relevance
+
+**33. Can your system diagnose diabetes?**  
+No. The system predicts risk only. Diagnosis requires clinical tests such as fasting glucose, HbA1c, or oral glucose tolerance testing by healthcare professionals.
+
+**34. What should the user do if the risk score is high?**  
+If the risk score is high, the user should treat it as an early warning and consult a healthcare professional for proper medical testing and guidance.
+
+**35. Is glucose alone enough to diagnose diabetes?**  
+No. A glucose value must be interpreted based on test type, such as fasting, random, or post-meal. Diagnosis usually requires proper clinical testing and confirmation.
+
+**36. Why is only diastolic blood pressure used?**  
+The PIMA dataset contains a single blood pressure feature, which represents diastolic blood pressure. Therefore, the system maps Health Connect diastolic blood pressure to the model's BloodPressure input.
+
+**37. What are the limitations of using wearable data?**  
+Wearable data may be incomplete, delayed, device-dependent, or unavailable for some metrics like glucose and blood pressure. It should be used for supportive monitoring, not diagnosis.
+
+**38. Are the recommendations medically validated?**  
+The current recommendations are rule-based preventive suggestions inspired by general diabetes prevention guidelines. They are not a replacement for professional medical advice.
+
+**39. How can this system support preventive healthcare?**  
+It provides early risk awareness, shows health trends, and explains risk factors so users can take timely lifestyle or medical action before the condition becomes severe.
+
+## UI and User Experience
+
+**40. What does the dashboard show?**  
+The dashboard shows the diabetes risk score, risk category, model input values, SHAP contribution graph, health metric trends, and sync status.
+
+**41. How is the risk score represented?**  
+The risk score is represented as a percentage bar so users can quickly understand whether their projected risk is lower, moderate, or higher.
+
+**42. What is the purpose of the SHAP graph?**  
+The SHAP graph shows how each feature affected the predicted risk. It helps users understand why the model produced the current score.
+
+**43. What is the What-if Simulator?**  
+The What-if Simulator allows users to temporarily change feature values and see how the model's predicted risk would change. It does not modify the real stored data.
+
+**44. Why did you include manual input fields?**  
+Manual input fields allow users to provide important missing values such as age, glucose, or blood pressure if those values are not available from the watch or Health Connect.
+
+**45. How does the user understand which feature increased risk?**  
+The dashboard shows positive and negative contribution bars. Positive values indicate increased risk, while negative values indicate reduced risk.
+
+## Technical Stack
+
+**46. Which technologies did you use?**  
+The project uses Kotlin for the Android sync app, Node.js with Express and TypeScript for the backend, React for the web dashboard, and Python with scikit-learn and SHAP for machine learning.
+
+**47. Why did you use Kotlin for the sync app?**  
+Kotlin was used because it is the modern recommended language for Android development and works well with Health Connect APIs.
+
+**48. Why did you use React for the dashboard?**  
+React was used because it allows dynamic, interactive, component-based web interfaces that are suitable for dashboards and visualizations.
+
+**49. What is the role of Node.js and Express?**  
+Node.js and Express are used to build the backend API that receives health data, stores it, processes it, and sends prediction results to the web dashboard.
+
+**50. What is scikit-learn used for?**  
+scikit-learn is used to train and evaluate the Random Forest Classifier.
+
+**51. Is Streamlit used in this project?**  
+No. Streamlit is not used. The dashboard is built using React, while Python is used only for model training and SHAP explainability.
+
+## Limitations
+
+**52. What are the limitations of your system?**  
+The system depends on Health Connect data availability, uses a limited dataset, is not clinically validated, and some important medical features may require manual input.
+
+**53. Why is PIMA not perfect for smartwatch-based prediction?**  
+PIMA is mainly a clinical tabular dataset and does not fully match smartwatch data. It includes features like glucose and blood pressure, while watches mostly provide activity, heart rate, sleep, and body metrics.
+
+**54. What happens if Health Connect does not provide glucose or blood pressure?**  
+The system marks those metrics as unavailable and may use default values or manual user inputs for prediction.
+
+**55. Can the model work for all age groups?**  
+The model can technically produce predictions for different ages, but its reliability depends on how well the training dataset represents those age groups.
+
+**56. How reliable is the prediction?**  
+The prediction is useful as a prototype risk estimate, but it is not clinically validated. It should be used for awareness, not diagnosis.
+
+**57. Is the system clinically validated?**  
+No. The current system is not clinically validated. Future work should include clinical validation using larger and more representative datasets.
+
+## Future Scope
+
+**58. How can this system be improved?**  
+It can be improved by using larger wearable-compatible datasets, adding more health metrics, validating the model clinically, and improving recommendation rules.
+
+**59. Can it predict other diseases?**  
+Yes. The same architecture can be adapted to predict other lifestyle-related conditions such as hypertension or cardiovascular disease if suitable datasets and features are available.
+
+**60. Can more wearable metrics be added?**  
+Yes. Metrics such as sleep quality, resting heart rate, oxygen saturation, activity intensity, and hydration can be added if they are available through Health Connect.
+
+**61. Can this be converted into a complete mobile app?**  
+Yes. The web dashboard and prediction results can be integrated into a full mobile app so users can monitor their risk directly from the phone.
+
+**62. How can clinical validation be done in the future?**  
+Clinical validation can be done by testing the system on real patient data, comparing predictions with medical outcomes, and involving healthcare professionals.
+
+**63. What dataset would you use in the future?**  
+A future version should use wearable-compatible datasets such as All of Us Fitbit data or UK Biobank accelerometer data, because they better match smartwatch-based prediction.
+
+## Very Likely Questions
+
+**64. Why Random Forest and not another model?**  
+Random Forest is suitable for tabular health data, performs well with limited preprocessing, reduces overfitting, and works effectively with SHAP explainability.
+
+**65. Why SHAP?**  
+SHAP provides feature-level explanations for individual predictions, making the model more transparent and easier for users to understand.
+
+**66. What is the difference between prediction and diagnosis?**  
+Prediction estimates the possibility or risk of a condition, while diagnosis confirms the disease through clinical tests and medical evaluation.
+
+**67. How does your system use smartwatch data?**  
+The smartwatch or health app sends data to Health Connect. The Android sync app reads permitted records and uploads them to the backend for prediction.
+
+**68. What does the confusion matrix mean?**  
+The confusion matrix compares actual and predicted classes. It shows correct predictions and errors, including false positives and false negatives.
+
+**69. How do you explain the risk score to the user?**  
+The risk score is explained using SHAP contribution values, which show how each feature increased or decreased the final prediction.
+
+**70. What is the biggest limitation of your project?**  
+The biggest limitation is that the model is trained on a clinical dataset that does not perfectly match wearable data, and the system has not yet been clinically validated.
+

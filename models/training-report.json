@@ -1,0 +1,27 @@
+{
+  "accuracy": 0.7597402597402597,
+  "rocAuc": 0.8114814814814814,
+  "trainRows": 614,
+  "testRows": 154,
+  "features": [
+    "Glucose",
+    "BloodPressure",
+    "BMI",
+    "Age",
+    "Daily_Steps"
+  ],
+  "defaultFeatureValues": {
+    "Glucose": 117.0,
+    "BloodPressure": 72.0,
+    "BMI": 32.3,
+    "Age": 29.0,
+    "Daily_Steps": 5143.541702591761
+  },
+  "featureImportances": {
+    "Glucose": 0.46268624157494515,
+    "BloodPressure": 0.05952197131702474,
+    "BMI": 0.1802554983940882,
+    "Age": 0.16303874580963668,
+    "Daily_Steps": 0.13449754290430535
+  }
+}

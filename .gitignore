@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+.idea/
+.gradle/
+.kotlin/
+local.properties
+*.iml
+.env
+.DS_Store
+Thumbs.db
+coverage/

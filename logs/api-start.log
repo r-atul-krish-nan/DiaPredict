@@ -1,0 +1,5 @@
+
+> @diapredict/api@0.1.0 start
+> node dist/server.js
+
+DiaPredict API listening on http://localhost:4000
